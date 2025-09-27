@@ -295,73 +295,36 @@ Add `extraMounts` to the control-plane/worker node section of `kind-config.yaml`
 
 Then create a HostPath PV in Kubernetes pointing to `/kind-pv`. This lets you persist test data between cluster recreations **only** if you keep the host directory and re-create the cluster with the same mounts.
 
----
-
-Good thinking 👍 because with **Kind**, shutdown/restart isn’t as “clean” as with a VM or K3s.
-
-Here’s how it works:
 
 ---
 
-## 🛑 Shutting Down Kind
 
-* A **Kind cluster is made of Docker containers** (1 for control-plane, N for workers).
 
-* To stop the cluster **gracefully**:
+If you want to **wipe everything inside the cluster (all pods, services, deployments, etc.)** but keep the cluster itself running: 🚨🚨🚨
 
-  ```bash
-  kind delete cluster --name my-cluster
-  ```
+```bash
+kubectl delete all --all --all-namespaces
+```
 
-  👉 This wipes the cluster completely.
-
-* If you **just stop Docker** (`sudo service docker stop` or quitting Docker Desktop), the Kind node-containers stop too. But:
-
-  * When you restart Docker, the containers may not always reconnect properly.
-  * Often you’ll end up recreating the cluster.
+⚠️ That will nuke **all workloads** (pods, deployments, services, daemonsets, etc.) across all namespaces. Core stuff like kube-system components will respawn automatically.
 
 ---
 
-## 🔄 Restarting
+If instead you want to **delete the whole KIND cluster (nodes + pods + config)**: 🔴
 
-* If you shut down your laptop or Docker → you’ll likely need to recreate the cluster:
+```bash
+kind delete cluster --name dev-lab
+```
 
-  ```bash
-  kind create cluster --name my-cluster --config kind-config.yaml
-  ```
+Then you can recreate cleanly: 🟢
 
-  👉 This is why we keep a **YAML config file** for reproducible setup.
-
-* If you want persistence (not deleting every time):
-
-  * Just **pause/resume Docker Desktop** instead of deleting.
-  * But be ready — sometimes clusters break → then `delete` + `create` is the cleanest way.
+```bash
+kind create cluster --name dev-lab --config kind-config.yaml
+```
 
 ---
 
-## 💡 Practical Workflow
 
-1. Day 1:
-
-   ```bash
-   kind create cluster --name dev --config kind-config.yaml
-   ```
-
-   Work with Deployments, StatefulSets, etc.
-
-2. End of day:
-
-   * If you don’t care about keeping workloads →
-
-     ```bash
-     kind delete cluster --name dev
-     ```
-   * If you want to keep workloads → just **close laptop / stop Docker Desktop** (may or may not survive cleanly).
-
-3. Next day:
-
-   * Usually faster to **recreate from config**.
-   * Apply your YAMLs again (`kubectl apply -f ...`).
 
 ---
 
