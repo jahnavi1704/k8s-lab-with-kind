@@ -1,9 +1,3 @@
-Nice — let’s do this. I’ll give you a **clear, copy-pasteable, step-by-step playbook** to create a **multi-node Kind cluster inside WSL2** (Windows 11). I’ll include cluster config, scripts (create / delete / quick-start), how to use local images, how to access services from Windows, and troubleshooting tips for your 8GB laptop.
-
-Follow each step in order from your **WSL2 distro (Ubuntu)** shell.
-
----
-
 # 0) Quick checklist (before starting)
 
 * Windows: Docker Desktop installed and using **WSL2 backend** (Docker Desktop → Settings → Resources → WSL Integration ON for your distro).
@@ -303,15 +297,3 @@ Then create a HostPath PV in Kubernetes pointing to `/kind-pv`. This lets you pe
 
 ---
 
-# 14) Next step (one-click)
-
-If you want, I’ll paste a single zip-ready script set containing:
-
-* `kind-config.yaml`
-* `start-cluster.sh` / `delete-cluster.sh`
-* `web-deploy.yaml` (sample app)
-* short README with the exact commands to run
-
-Say **“yes, give me the script set”** and I’ll produce the files (copy-paste-ready). Or say **“start now”** and I’ll give the exact sequence you should run right now in WSL2 to create your cluster and deploy nginx.
-
-Which do you want — the script bundle, or the step-by-step commands to run now?
